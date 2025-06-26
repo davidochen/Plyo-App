@@ -1,3 +1,5 @@
+#Plyo-App (Name still TBD)
+
 Plyo App is a mobile application built with React Native and Expo, designed to help users stay consistent with plyometric workouts and track their vertical jump progress over time. Using computer vision, personalized programming, and social features, Plyo App makes explosive training measurable, engaging, and sustainable.
 
 🧠 Why Plyo App?
