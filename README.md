@@ -32,3 +32,7 @@ Use cutting-edge AI to measure jumps and improve form
 
 🎯 Mission
 To make plyometric workouts more approachable, consistent, and trackable — empowering athletes and everyday users to unlock their vertical potential.
+
+git clone
+npm install
+npx expo start
