@@ -16,23 +16,34 @@ Stay consistent through social accountability
 Use cutting-edge AI to measure jumps and improve form
 
 📱 Key Features
+
+
 🔁 Personalized Plyo Programs tailored to user fitness level and goals
+
 
 📷 Vertical Jump Tracking using camera-based computer vision
 
+
 🧠 AI-Powered Form Feedback to improve jump technique
+
 
 💪 Recovery & Strength Exercises for injury prevention
 
+
 🧍‍♂️ Progress Dashboard to visualize improvements
 
+
 🤝 Social Tracking to follow friends and stay motivated
+
 
 🧮 Advanced Jump Estimation (coming soon): Uses height, wingspan, and motion data to estimate vertical leap with high accuracy
 
 🎯 Mission
+
 To make plyometric workouts more approachable, consistent, and trackable — empowering athletes and everyday users to unlock their vertical potential.
 
 git clone
+
 npm install
+
 npx expo start
