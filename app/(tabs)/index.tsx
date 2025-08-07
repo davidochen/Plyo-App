@@ -1,15 +1,24 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import JumpMeasurement from '../../components/JumpMeasurement';
+import AdvancedCamera from '../../components/AdvancedCamera';
+import JumpAnalyzer from '../../components/JumpAnalyzer';
+import CameraTest from '../../components/CameraTest';
 
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
+  const [showAdvancedCamera, setShowAdvancedCamera] = useState(false);
+  const [showJumpAnalyzer, setShowJumpAnalyzer] = useState(false);
+  const [showCameraTest, setShowCameraTest] = useState(false);
+  const [jumpHistory, setJumpHistory] = useState<number[]>([]);
+  
   const todayStats = {
     streak: 7,
-    bestJump: 28.5,
+    bestJump: jumpHistory.length > 0 ? Math.max(...jumpHistory) : 28.5,
     weeklyGoal: 75,
     weeklyProgress: 60,
   };
@@ -18,28 +27,35 @@ export default function HomeScreen() {
     { 
       id: 1, 
       title: 'Measure Jump', 
-      icon: 'camera', 
+      icon: 'camera' as const, 
       color: '#10B981', 
-      description: 'Track your vertical'
+      description: 'AI-powered'
     },
     { 
       id: 2, 
+      title: 'Camera Test', 
+      icon: 'video' as const, 
+      color: '#EF4444', 
+      description: 'Test camera'
+    },
+    { 
+      id: 3, 
       title: 'Quick Workout', 
-      icon: 'play', 
+      icon: 'play' as const, 
       color: '#F97316', 
       description: '15 min session'
     },
     { 
-      id: 3, 
+      id: 4, 
       title: 'View Progress', 
-      icon: 'trending-up', 
+      icon: 'trending-up' as const, 
       color: '#1E40AF', 
       description: 'See your gains'
     },
     { 
-      id: 4, 
+      id: 5, 
       title: 'Friends', 
-      icon: 'users', 
+      icon: 'users' as const, 
       color: '#7C3AED', 
       description: 'Compare progress'
     },
@@ -47,9 +63,38 @@ export default function HomeScreen() {
 
   const recentAchievements = [
     { title: '7-Day Streak!', date: 'Today', icon: '🔥' },
-    { title: 'New PR: 28.5"', date: 'Yesterday', icon: '🎯' },
+    { title: `New PR: ${todayStats.bestJump}"`, date: 'Yesterday', icon: '🎯' },
     { title: 'Form Improved', date: '2 days ago', icon: '💪' },
   ];
+
+  const handleAdvancedJumpRecorded = (height: number, videoUri?: string) => {
+    setJumpHistory(prev => [...prev, height]);
+    setShowAdvancedCamera(false);
+  };
+
+  const handleJumpAnalyzerRecorded = (height: number, videoUri?: string) => {
+    setJumpHistory(prev => [...prev, height]);
+    setShowJumpAnalyzer(false);
+  };
+
+  const handleAdvancedCameraClose = () => {
+    setShowAdvancedCamera(false);
+  };
+
+  const handleJumpAnalyzerClose = () => {
+    setShowJumpAnalyzer(false);
+  };
+
+  const startJumpMeasurement = () => {
+    setShowJumpAnalyzer(true);
+  };
+
+  const handleCameraTestClose = () => {
+    setShowCameraTest(false);
+  };
+
+  // Debug logging
+  console.log('Current camera states - showAdvancedCamera:', showAdvancedCamera, 'showJumpAnalyzer:', showJumpAnalyzer, 'showCameraTest:', showCameraTest);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -104,7 +149,17 @@ export default function HomeScreen() {
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
             {quickActions.map((action) => (
-              <TouchableOpacity key={action.id} style={styles.actionCard}>
+              <TouchableOpacity 
+                key={action.id} 
+                style={styles.actionCard}
+                onPress={() => {
+                  if (action.id === 1) {
+                    startJumpMeasurement();
+                  } else if (action.id === 2) {
+                    setShowCameraTest(true);
+                  }
+                }}
+              >
                 <View style={[styles.actionIcon, { backgroundColor: action.color }]}>
                   <Feather name={action.icon} size={24} color="white" />
                 </View>
@@ -159,6 +214,33 @@ export default function HomeScreen() {
           </LinearGradient>
         </View>
       </ScrollView>
+      
+      {/* Advanced Camera */}
+      {showAdvancedCamera && (
+        <>
+          {console.log('Rendering AdvancedCamera component, showAdvancedCamera:', showAdvancedCamera)}
+          <AdvancedCamera
+            onClose={handleAdvancedCameraClose}
+            onJumpRecorded={handleAdvancedJumpRecorded}
+          />
+        </>
+      )}
+
+      {/* Jump Analyzer */}
+      {showJumpAnalyzer && (
+        <>
+          {console.log('Rendering JumpAnalyzer component, showJumpAnalyzer:', showJumpAnalyzer)}
+          <JumpAnalyzer
+            onClose={handleJumpAnalyzerClose}
+            onJumpRecorded={handleJumpAnalyzerRecorded}
+          />
+        </>
+      )}
+
+      {/* Camera Test */}
+      {showCameraTest && (
+        <CameraTest onClose={handleCameraTestClose} />
+      )}
     </SafeAreaView>
   );
 }

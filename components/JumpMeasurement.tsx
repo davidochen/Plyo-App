@@ -10,6 +10,7 @@ interface JumpMeasurementProps {
 }
 
 export default function JumpMeasurement({ onClose, onJumpRecorded }: JumpMeasurementProps) {
+  console.log('JumpMeasurement component initialized');
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [isRecording, setIsRecording] = useState(false);
@@ -99,9 +100,10 @@ export default function JumpMeasurement({ onClose, onJumpRecorded }: JumpMeasure
   };
 
   return (
-    <View style={styles.container}>
-      {/* Camera View */}
-      <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
+    <View style={styles.overlay}>
+      <View style={styles.container}>
+        {/* Camera View */}
+        <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -202,10 +204,20 @@ export default function JumpMeasurement({ onClose, onJumpRecorded }: JumpMeasure
         </View>
       </CameraView>
     </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1000,
+  },
   container: {
     flex: 1,
     backgroundColor: '#111827',
